@@ -1,0 +1,6 @@
+cook
+sleep
+clean
+clean
+clean
+sleep

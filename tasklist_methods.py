@@ -12,13 +12,13 @@ task_list: list[Union[str, Any]] = [] #Instead of a list, we can use a dict. Key
 @lambda _: _()
 def pre_loader() -> None: 
     # use need to provide a file path
-    filepath = ""
+    filepath = "todo_list\\task.txt"
     with open(file=filepath, mode="a") as file:
         pass
 
 # We move this to tasklist_setup and provide a safe_tasklist functionality
 def save_task() -> Optional[Any]:
-    filepath = ""
+    filepath = "todo_list\\task.txt"
     #filepath = "file\\task.txt"
     with open(filepath, "w") as file:
         for current_task in task_list:
@@ -46,26 +46,23 @@ def add_task(task: str) -> Any:
 
 #This is duplicated. If a tasks can only be added once, why should there be a mechanism
 #that removes a task that is duplicated
-def remove_task(task_to_remove: str) -> Any:
-    #os.system("cls") <-- RRemove, no os commands
-    # make sure every task in list only exits onces
-    occur: int = 0
-    for current_task in task_list:
-        if current_task == task_to_remove:
-            occur += 1
-    
-    if occur > 1:
-        for index, value in enumerate(task_list[:-1]):
-            if task_to_remove == value:
-                del task_list[index]
-                print('Tasked removed')
-    else:
+def remove_task() -> Any:
+    try:
+        #os.system("cls") <-- RRemove, no os commands
+        # make sure every task in list only exits onces
+        # display current task
         for index, value in enumerate(task_list):
-            if task_to_remove == value:
-                del task_list[index]
-                print("Tasked remove")
+            print(f"{index}, {value}")
+
+        # task is being deleted based on it index
+        print("Select task by number: ")
+        task_to_delete: int = int(input("> "))
         
-    return task_list
+        del task_list[task_to_delete]
+    except IndexError:
+        print("\nTask does not exits\n")
+    finally:
+        return task_list
 
 # the user should be able to update a task in the list
 def update_task() -> Any:
@@ -90,7 +87,7 @@ def update_task() -> Any:
 @lambda _: _() # <-- What is this?
 #This should be part of the tasklist_setup class
 def load_task() -> Optional[Any]:
-    filepath = ""
+    filepath = "todo_list\\task.txt"
 
     #filepath = "file\\task.txt"
 
@@ -123,8 +120,7 @@ def main():
                 usr_task: str = input("Enter task: ")
                 add_task(task=usr_task)
             case "r":
-                remove_task_input: str = input("Enter task to remove: ")
-                print(remove_task(remove_task_input))
+                print(remove_task())
             case "u":
                 print(update_task())
             case "c":
