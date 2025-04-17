@@ -1,10 +1,14 @@
-from typing import Any
+from typing import Any, Union, Optional
 import os
-task_list: list[str| Any] = []
+
+#we should turn this into a class
+# This task list comes from the tasklist_setup class and can have different instances
+task_list: list[Union[str, Any]] = [] #Instead of a list, we can use a dict. Key-Value pair is more useful here
 
 # issues to address if two task are in the list and you remove one it removes both of them fix it so the most recent on get deleted 
 
 # without this function the other iife won't be able to find the file path
+# We move this to tasklist_setup
 @lambda _: _()
 def pre_loader() -> None: 
     # use need to provide a file path
@@ -12,7 +16,8 @@ def pre_loader() -> None:
     with open(file=filepath, mode="a") as file:
         pass
 
-def save_task() -> Any | None:
+# We move this to tasklist_setup and provide a safe_tasklist functionality
+def save_task() -> Optional[Any]:
     filepath = ""
     #filepath = "file\\task.txt"
     with open(filepath, "w") as file:
@@ -20,27 +25,29 @@ def save_task() -> Any | None:
             file.write(f"{current_task}\n")
 
 
-def check_if_task_exits(task) -> int | Any:
+def check_if_task_exits(task) -> Union[int, Any]:
     if task in task_list:
         return -1 # return -1 means task is in list
     else:
         return 0 # return 0 means not in list
 
 def add_task(task: str) -> Any:
-    os.system("cls")
+    #os.system("cls") <-- remove this
     occur: int = 0
     for current_task in task_list:
         if current_task == task:
             occur += 1
     
     if occur > 2:
-        print("you can't add task")
+        print("you can't add task") #<-- Change to task already exists
     else:
         task_list.append(task)
         print(f"task added")
 
+#This is duplicated. If a tasks can only be added once, why should there be a mechanism
+#that removes a task that is duplicated
 def remove_task(task_to_remove: str) -> Any:
-    os.system("cls")
+    #os.system("cls") <-- RRemove, no os commands
     # make sure every task in list only exits onces
     occur: int = 0
     for current_task in task_list:
@@ -62,9 +69,9 @@ def remove_task(task_to_remove: str) -> Any:
 
 # the user should be able to update a task in the list
 def update_task() -> Any:
-    os.system("cls")
+    #os.system("cls")
     # clear the screen
-    os.system("cls")
+    #os.system("cls")
 
     # load all task in a nice format
     for index, value in enumerate(task_list):
@@ -80,8 +87,9 @@ def update_task() -> Any:
     
     return task_list
 
-@lambda _: _()
-def load_task() -> Any | None:
+@lambda _: _() # <-- What is this?
+#This should be part of the tasklist_setup class
+def load_task() -> Optional[Any]:
     filepath = ""
 
     #filepath = "file\\task.txt"
@@ -93,6 +101,8 @@ def load_task() -> Any | None:
 
 
 @lambda _: _()
+#This should be part of the main.py class. There, we initate the task list
+# and we provide the respective methods
 def main():
     msg = """
 [a]dd task
